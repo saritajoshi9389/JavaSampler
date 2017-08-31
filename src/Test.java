@@ -1,7 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 
 
 public class Test {
@@ -164,6 +161,57 @@ public class Test {
         return length;
     }
 
+    public static boolean isValid(String s) {
+        HashMap<Character, Character> match = new HashMap<Character, Character>();
+        match.put(')','(');
+        match.put('}','{');
+        match.put(']','[');
+        Stack<Character> stack = new Stack<Character>();
+        for (int i = 0; i < s.length(); i ++){
+            if (s.charAt(i) == '(' || s.charAt(i) == '{' || s.charAt(i) == '[') {
+                stack.push(s.charAt(i));
+                continue;
+            }
+            if (stack.size() == 0 || match.get(s.charAt(i)) != stack.pop()) {
+                return false;
+            }
+        }
+        if (stack.size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public static List<String> letterCombinations(String digits) {
+        Map<Character, String> pair = new HashMap<>();
+        ArrayList<String> res = new ArrayList<>();
+        ArrayList<String> preres = new ArrayList<>();
+        pair.put('2', "abc");
+        pair.put('3', "def");
+        pair.put('4', "ghi");
+        pair.put('5', "jkl");
+        pair.put('6', "mno");
+        pair.put('7', "pqrs");
+        pair.put('8', "tuv");
+        pair.put('9', "wxyz");
+        if(digits.length() == 0){
+            return res;
+        }
+        else {
+            res.add("");
+            for (int i = 0; i < digits.length(); i++) {
+                for (String str : res) {
+                    String letters = pair.get(digits.charAt(i));
+                    for (int j = 0; j < letters.length(); j++)
+                        preres.add(str + letters.charAt(j));
+                }
+                res = preres;
+                preres = new ArrayList<String>();
+            }
+            return res;
+        }
+    }
+
     public static void main(String[] args) {
         int[] input = new int[]{2, 7, 11, 15};
         System.out.println("Result of best solution" + Arrays.toString(twoSumCorrect(input, 26)));
@@ -205,6 +253,16 @@ public class Test {
             System.out.print(current.val + "\t");
             current = current.next;
         }
+
+//        for(int a = 0 ; a < 5 ; a++){
+//            if(a%2== 0){
+//                System.out.println("\n hi and value is" + a);
+//                continue;
+//            }
+//            System.out.println("dnn know!!!");
+//        }
+        System.out.println("\n String validation :: " + isValid("()"));
+        System.out.println("\n  string pattern list :: " + letterCombinations("22"));
 
     }
 }
