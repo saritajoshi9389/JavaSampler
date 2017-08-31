@@ -212,6 +212,23 @@ public class Test {
         }
     }
 
+    public static List<String> GenerateParentheses(int n){
+        ArrayList<String> result = new ArrayList<>();
+        GenerateParenthesesHelper(result, "", n , n);
+        return result;
+    }
+
+    private static void GenerateParenthesesHelper(ArrayList<String> result, String s, int left, int right) {
+        if (left > right) return;
+        if(left == 0 && right == 0){
+            result.add(s);
+            return;
+        }
+        if(left > 0) GenerateParenthesesHelper(result, s +"(", left -1, right);
+        if(right > 0) GenerateParenthesesHelper(result, s +")", left, right -1);
+
+    }
+
     public static void main(String[] args) {
         int[] input = new int[]{2, 7, 11, 15};
         System.out.println("Result of best solution" + Arrays.toString(twoSumCorrect(input, 26)));
@@ -263,6 +280,7 @@ public class Test {
 //        }
         System.out.println("\n String validation :: " + isValid("()"));
         System.out.println("\n  string pattern list :: " + letterCombinations("22"));
+        System.out.println("\n Generate parentheses list :: " + GenerateParentheses(2));
 
     }
 }
