@@ -229,6 +229,103 @@ public class Test {
 
     }
 
+    public static void permute(int[] arr){
+        permuteHelper(arr, 0);
+    }
+
+    private static void permuteHelper(int[] arr, int index) {
+        if(index >= arr.length - 1){ //If we are at the last element - nothing left to permute
+            //System.out.println(Arrays.toString(arr));
+            //Print the array
+            System.out.print("[");
+            for(int i = 0; i < arr.length - 1; i++){
+                System.out.print(arr[i] + ", ");
+            }
+            if(arr.length > 0)
+                System.out.print(arr[arr.length - 1]);
+            System.out.println("]");
+            return;
+        }
+
+        for(int i = index; i < arr.length; i++){ //For each index in the sub array arr[index...end]
+
+            //Swap the elements at indices index and i
+            int t = arr[index];
+            arr[index] = arr[i];
+            arr[i] = t;
+
+            //Recurse on the sub array arr[index+1...end]
+            permuteHelper(arr, index+1);
+
+            //Swap the elements back
+            t = arr[index];
+            arr[index] = arr[i];
+            arr[i] = t;
+        }
+    }
+
+    public static int[] plusOne(int[] digits) {
+            int carry = 1;
+            int[] result = new int[digits.length];
+            for(int i = digits.length -1 ; i >=0 ; i--){
+                int val = digits[i] + carry;
+                result[i] = val%10;
+                carry = val /10;
+
+            }
+            if(carry == 1){
+                result = new int[digits.length + 1];
+                result[0] = 1;
+            }
+            return result;
+
+    }
+
+    class MinStack {
+        public  Stack<Integer> normalStack = new Stack<Integer>();
+        public Stack<Integer> minStack = new Stack<Integer>();
+
+        /** initialize your data structure here. */
+        public MinStack() {
+            normalStack = new Stack<>();
+            minStack = new Stack<>();
+
+        }
+
+        public void push(int x) {
+            normalStack.push(x);
+            if(minStack.isEmpty() || (x <= minStack.peek())){
+                minStack.push(x);
+            }
+
+        }
+
+        public void pop() {
+            if(!normalStack.isEmpty()){
+                int num = normalStack.pop();
+                if(!minStack.isEmpty() && num == minStack.peek())
+                    minStack.pop();
+            }
+        }
+
+        public int top() {
+            if(normalStack.isEmpty()) return -1;
+            else
+                return normalStack.peek();
+
+        }
+
+        public int getMin() {
+            if(minStack.size()== 0) return -1;
+            return minStack.peek();
+
+        }
+    }
+
+//    static int findNode(Node start, int value){
+//
+//    }
+
     public static void main(String[] args) {
         int[] input = new int[]{2, 7, 11, 15};
         System.out.println("Result of best solution" + Arrays.toString(twoSumCorrect(input, 26)));
@@ -281,6 +378,10 @@ public class Test {
         System.out.println("\n String validation :: " + isValid("()"));
         System.out.println("\n  string pattern list :: " + letterCombinations("22"));
         System.out.println("\n Generate parentheses list :: " + GenerateParentheses(2));
+        permute(new int[]{1,2,3});
+        System.out.println("\n Oneplus :: ");
+        int[] out = plusOne(new int[]{1,0,0});
+        System.out.println(Arrays.toString(out));
 
     }
 }
