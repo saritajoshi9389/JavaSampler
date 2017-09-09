@@ -185,6 +185,8 @@ public class BinaryTree {
     /*
        LCA in a Binary Tree ///////////// No comparison of data simple check left and right
        Check this result in debugger
+
+        f(n)=2*f(n-1)=2*2*f(n-2)=2^(logn), so time=O(n).
         */
     public NewNode lowestCommonAncestorBT(NewNode root, NewNode p, NewNode q) {
         if(root == null) return null; // root empty -> stop
