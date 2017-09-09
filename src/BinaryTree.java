@@ -142,4 +142,64 @@ public class BinaryTree {
         return result;
 
     }
+    /*
+    Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+     */
+    public List<Integer> rightSideView(NewNode root) {
+        List<Integer> result = new ArrayList<>();
+        if( root == null) return result;
+        Queue<NewNode> q = new LinkedList<>();
+        q.add(root);
+        while(q.size() >0){
+            int size = q.size();
+            for(int i = 0 ; i < size; i++){
+                NewNode curr = q.remove();
+                if(i == 0){
+                    result.add(curr.data);
+                }
+
+                if(curr.right != null){
+                    q.add(curr.right);
+                }
+                if(curr.left != null){
+                    q.add(curr.left);
+                }
+
+            }
+
+
+        }
+        return result;
+    }
+    /*
+    LCA in a BST
+     */
+    public NewNode lowestCommonAncestor(NewNode root, NewNode p, NewNode q) {
+        NewNode temp = root;
+        if(temp.data > p.data && temp.data < q.data){ return temp;} //either this
+        else if(temp.data > p.data && temp.data > q.data) {return lowestCommonAncestor(temp.left, p, q);} //or
+        else if(temp.data < p.data && temp.data < q.data) {return lowestCommonAncestor(temp.right, p, q);} //or
+
+        return root;  // LCA is always the root node so return that and thatz y created a temp for traversing
+    }
+    /*
+       LCA in a Binary Tree ///////////// No comparison of data simple check left and right
+       Check this result in debugger
+        */
+    public NewNode lowestCommonAncestorBT(NewNode root, NewNode p, NewNode q) {
+        if(root == null) return null; // root empty -> stop
+
+        if(root == p || root == q) return root; // only one node, return the node stop
+
+        NewNode leftOne = lowestCommonAncestor(root.left, p, q);
+
+        NewNode rightOne = lowestCommonAncestor(root.right, p, q);
+
+        if(leftOne  != null && rightOne != null) return root; // both non-null
+        else if(leftOne == null && rightOne == null) return null; // both null
+        else{
+            return (leftOne == null? rightOne : leftOne); // one null, just move in other direction
+        }
+
+    }
 }
