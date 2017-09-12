@@ -382,6 +382,52 @@ public class Test {
         System.out.println("\n Oneplus :: ");
         int[] out = plusOne(new int[]{1,0,0});
         System.out.println(Arrays.toString(out));
+        ArrayList<ArrayList<Integer>> resultPas = getPascalTriangle(3);
+        System.out.println("Pascal Triangle :: \n" + resultPas.toString());
+
+
+
+    }
+// Pascal triangle to return a single row
+    private static ArrayList<ArrayList<Integer>> getPascalTriangle(int numOfRows) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if(numOfRows < 0) return  res;
+        ArrayList<Integer> pre = new ArrayList<>();  // holds the previous row info
+        pre.add(1);
+        res.add(pre); // first row done
+        for(int row = 2 ; row <= numOfRows; row ++){
+            ArrayList<Integer> currentRow = new ArrayList<>();
+            currentRow.add(1);
+            for(int j = 0; j < pre.size() -1 ; j ++)
+                currentRow.add(pre.get(j) + pre.get(j+1));
+
+            currentRow.add(1);
+            res.add(currentRow);
+            pre = currentRow;
+        }
+
+    return  res;
+    }
+
+// Complete pascal triangle
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(numRows <= 0) return result;
+        List<Integer> pre = new ArrayList<>();
+        pre.add(1);
+        result.add(pre);
+        for(int i = 1; i < numRows; i++){
+            List<Integer> current = new ArrayList<>();
+            current.add(1);
+            for(int j = 0; j < pre.size() -1; j++){
+                current.add(pre.get(j) + pre.get(j+1));
+            }
+            current.add(1);
+            result.add(current);
+            pre =current;
+        }
+        return result;
+
 
     }
 }
