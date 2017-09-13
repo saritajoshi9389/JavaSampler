@@ -252,4 +252,85 @@ public class BinaryTree {
 
         return count;
     }
+
+// IMp check whether the List is a palindrome or not
+    /*
+    1) Get the middle of the linked list.
+2) Reverse the second half of the linked list.
+3) Check if the first half and second half are identical.
+4) Construct the original linked list by reversing the second half again and attaching it back to the first half
+     */
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode slow_prev = head;
+        ListNode mid = null;
+        ListNode secondStart = null;
+        boolean result = true;
+        // find middle
+        if(head != null && head.next != null){
+            while(fast != null && fast.next != null){
+                fast = fast.next.next;
+                slow_prev = slow;
+                slow = slow.next;
+            }
+
+            if(fast != null) // odd elements in the list
+            {
+                mid = slow;
+                slow = slow.next;
+            }
+            // Broke and found middle
+            // Handle two separate lists
+            secondStart = slow;
+            slow_prev.next = null; // This was the error I encountered.... prev -> next-> null
+            ListNode tmp = reverse(secondStart);
+            secondStart = tmp;
+            result = CompareList(head, secondStart);
+            ListNode tmp1 = reverse(secondStart);
+            secondStart = tmp1;
+            if(mid !=null){
+                slow_prev = mid;
+                mid.next = secondStart;
+            }
+            else
+                slow_prev = secondStart;
+        }
+
+
+        return result;
+
+    }
+
+    public ListNode reverse(ListNode head){
+        ListNode curr = head;
+        ListNode prev = null;
+        while (curr != null){
+            ListNode tmp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = tmp;
+        }
+        return prev;
+    }
+
+    public boolean CompareList(ListNode A, ListNode B){
+        ListNode curra = A;
+        ListNode currb = B;
+        // Keep iterating
+        while (curra != null && currb != null){
+            if(curra.val == currb.val){
+                curra = curra.next;
+                currb = currb.next;
+            }
+            else{
+                return false;
+            }
+        }
+        // both end implies correct
+        if(curra == null & currb == null) return true;
+
+        return false;
+
+    }
 }

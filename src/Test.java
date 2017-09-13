@@ -449,4 +449,80 @@ public class Test {
         return maxprofit;
 
     }
+
+    public int[] twoSumSorted(int[] numbers, int target) {
+        int low = 0;
+        int high = numbers.length -1;
+        while (low < high){
+            int sum = numbers[low] + numbers[high];
+            if (sum == target){
+                return (new int[]{low+1, high+1});
+            }
+            else if (sum < target){
+                low++;
+            }
+            else{
+                high --;
+            }
+        }
+        return (new int[]{-1, -1});
+
+    }
+
+    // Primes count
+    public int countPrimes(int n) {
+        ArrayList<Integer> primes = new ArrayList<>();
+        if(n == 0 || n == 1)
+            return 0;
+        if (n ==2) return 0;
+        if(n == 3) return 1;
+        primes.add(2);
+        primes.add(3);
+
+        for(int i = 4; i < n ; i ++){
+            boolean isPrime = true;
+            for(int j = 0 ; j < primes.size(); j ++){
+                if(i % primes.get(j) == 0){
+                    isPrime = false;
+                    break;
+                }
+            }
+
+            if(isPrime){
+                primes.add(i);
+            }
+        }
+
+        return primes.size();
+
+    }
+// Super algo with no time limit exceeded always start with 2
+    public int countPrimesBetter(int n) {
+        if(n <= 2)
+            return 0;
+        boolean[] primes = new boolean[n];
+        for (int i =2 ; i < n; i++){
+            primes[i] = true;
+
+        }
+
+        for(int i = 2; i <=  Math.sqrt(n-1); i ++){
+            if(primes[i]){
+                for(int j = i +i; j < n ; j+= i){
+                    primes[j] = false;
+                }
+            }
+        }
+
+        int count = 0;
+        for(int i =2 ; i < n ; i++){
+            if(primes[i]){
+                count++;
+            }
+        }
+        return count;
+    }
+
+
+
 }
