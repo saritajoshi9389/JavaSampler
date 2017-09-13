@@ -384,6 +384,7 @@ public class Test {
         System.out.println(Arrays.toString(out));
         ArrayList<ArrayList<Integer>> resultPas = getPascalTriangle(3);
         System.out.println("Pascal Triangle :: \n" + resultPas.toString());
+        System.out.println("Max profit::" + maxProfit(new int[]{ 7, 6, 4,3,1}));
 
 
 
@@ -428,6 +429,24 @@ public class Test {
         }
         return result;
 
+
+    }
+
+    public static int maxProfit(int[] prices) {
+        int min = Integer.MAX_VALUE;
+        int maxprofit = 0;
+        for(int i =0 ; i < prices.length; i++) {
+            if(min > prices[i]) {
+                min = prices[i];
+            }
+            else if(maxprofit < (prices[i] - min)){
+                maxprofit = prices[i] - min;
+            }
+
+
+        }
+
+        return maxprofit;
 
     }
 }

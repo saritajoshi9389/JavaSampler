@@ -204,4 +204,52 @@ public class BinaryTree {
         }
 
     }
+
+    // Find the intersection point in 2 lInkedList
+
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        int c1 = getCount(headA);
+        int c2 = getCount(headB);
+        int d;
+
+        if (c1 > c2) {
+            d = c1 - c2;
+            return getIntesectionNode(d, headA, headB);
+        } else {
+            d = c2 - c1;
+            return getIntesectionNode(d, headB, headA);
+        }
+    }
+
+    public  ListNode getIntesectionNode(int d, ListNode node1, ListNode node2) {
+        int i;
+        ListNode current1 = node1;
+        ListNode current2 = node2;
+        for (i = 0; i < d; i++) {
+            if (current1 == null) {
+                return null;
+            }
+            current1 = current1.next;
+        }
+        while (current1 != null && current2 != null) {
+            if (current1.val == current2.val) {
+                return current1;
+            }
+            current1 = current1.next;
+            current2 = current2.next;
+        }
+
+        return null;
+    }
+    public int getCount(ListNode node) {
+        ListNode current = node;
+        int count = 0;
+
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+
+        return count;
+    }
 }
