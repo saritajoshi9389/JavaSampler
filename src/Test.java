@@ -385,7 +385,8 @@ public class Test {
         ArrayList<ArrayList<Integer>> resultPas = getPascalTriangle(3);
         System.out.println("Pascal Triangle :: \n" + resultPas.toString());
         System.out.println("Max profit::" + maxProfit(new int[]{ 7, 6, 4,3,1}));
-
+        System.out.println("First uni char :: " + firstUniqChar(""));
+        System.out.println("Is ana :: " + isAnagram("acdb", "abcd"));
 
 
     }
@@ -523,6 +524,45 @@ public class Test {
         return count;
     }
 
+//Yay works
+    public static int firstUniqChar(String s) {
+        int result = -1;
+        HashMap<Character, Integer> maps = new HashMap<>();
+        for(int i = 0 ; i < s.length(); i++){
+            if(maps.containsKey(s.charAt(i))){
+                maps.put(s.charAt(i), maps.get(s.charAt(i)) +1);
+            }
+            else{
+                maps.put(s.charAt(i), 1);
+            }
+        }
 
+        System.out.println("Hashmap" + maps.toString());
 
+        for(int i =0 ; i < s.length(); i++){
+            if(maps.get(s.charAt(i)) == 1) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public static boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        int[] counter = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            counter[s.charAt(i) - 'a']++;
+            counter[t.charAt(i) - 'a']--;
+        }
+        System.out.println(Arrays.toString(counter));
+        for (int count : counter) {
+            if (count != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
