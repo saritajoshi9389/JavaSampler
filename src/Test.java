@@ -387,10 +387,112 @@ public class Test {
         System.out.println("Max profit::" + maxProfit(new int[]{ 7, 6, 4,3,1}));
         System.out.println("First uni char :: " + firstUniqChar(""));
         System.out.println("Is ana :: " + isAnagram("acdb", "abcd"));
+        System.out.println("Longest palindromic substring :: " + findLongestPalindromic("forgeeksskeegfor"));
+        System.out.println("Longest palindromic substring :: " + findLongestPalindromic1("forgeeksskeegfor"));
+        int[][] a = {{1,0},{2,0},{3,1},{3,2}};
+        System.out.println("Course scheduler in topological sort :: " + Arrays.toString(findOrder(4, a)));
 
+        System.out.println("Course scheduler in topological sort  DFS:: " + Arrays.toString(findOrderDFS(4, a)));
+    }
+
+    // o(n^ 2) -> both time and space
+    private static String findLongestPalindromic(String str) {
+
+        int len = str.length();
+        boolean[][] table = new boolean[len][len];
+
+        // for length
+        int maxLength = 1;
+        // all substring of just length 1
+        for (int i = 0 ; i < len ; i++){
+            table[i][i] =true;
+
+        }
+        // len 2
+        int start = 0;
+        for(int i = 0; i < len-1; i++){
+            if(str.charAt(i) == str.charAt(i+1)){
+                table[i][i+1] = true;
+                start = i;
+                maxLength = 2;
+            }
+        }
+        // more than 2
+        // untill length   <=len
+        for(int k = 3 ; k <= len ; k++){
+            for(int i = 0 ; i < len -k +1; i++){
+
+                int j  = i + k -1;
+                if(str.charAt(i) == str.charAt(j) && table[i+1][j-1] == table[i][i]){
+                    table[i][j] = true;
+                    if(k > maxLength){
+                        maxLength = k;
+                        start = i;
+                    }
+                }
+
+
+            }
+        }
+
+        return printString(str, start, start+maxLength -1);
 
     }
-// Pascal triangle to return a single row
+// o(n2 and no space , o(1))
+    private static String findLongestPalindromic1(String str) {
+
+        int len = str.length();
+        int maxLength = 1; //max length of palindromic sub string
+        int start = 0;
+        int low, high;
+
+        // alll here
+
+       // we start from low i -1
+        for(int i = 1 ; i < len ; i++){
+            low = i -1;
+            high = i;
+            //even
+            while(low >=0 && high < len && str.charAt(low) == str.charAt(high)){
+
+                if(high - low + 1 > maxLength){
+                    maxLength = high - low + 1;
+                    start = low;
+                }
+                --low;
+                ++high;
+
+            }
+            //odd
+            low = i -1;
+            high = i+1;
+
+            while(low >= 0 && high < len && str.charAt(low) == str.charAt(high)){
+                if(high - low + 1 > maxLength){
+                    maxLength = high - low + 1;
+                    start = low;
+                }
+            }
+
+            --low;
+            ++high;
+
+
+
+        }
+
+        return printString(str, start, start+maxLength -1);
+
+    }
+
+
+    private static String printString(String str, int low, int high){
+
+        return(str.substring(low, high + 1));
+    }
+
+
+    // Pascal triangle to return a single row
     private static ArrayList<ArrayList<Integer>> getPascalTriangle(int numOfRows) {
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();
         if(numOfRows < 0) return  res;
@@ -550,19 +652,127 @@ public class Test {
 
     public static boolean isAnagram(String s, String t) {
         if (s.length() != t.length()) {
-            return false;
-        }
-        int[] counter = new int[26];
+        return false;
+    }
+    int[] counter = new int[26];
         for (int i = 0; i < s.length(); i++) {
-            counter[s.charAt(i) - 'a']++;
-            counter[t.charAt(i) - 'a']--;
-        }
+        counter[s.charAt(i) - 'a']++;
+        counter[t.charAt(i) - 'a']--;
+    }
         System.out.println(Arrays.toString(counter));
         for (int count : counter) {
-            if (count != 0) {
-                return false;
+        if (count != 0) {
+            return false;
+        }
+    }
+        return true;
+}
+
+
+// Questions on topological sort
+// Learning Kahns algo with BFS
+    public static int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> g = new HashMap<>();
+        int[] inDegrees = new int[numCourses];
+        buildGraph(numCourses, prerequisites, g, inDegrees);
+
+        int[] res = new int[numCourses];
+        int sortedLen = 0;
+        Queue<Integer> q = new ArrayDeque<>();
+
+        for (int i = 0; i < numCourses; ++i) {
+            if (inDegrees[i] == 0) {
+                q.add(i);
             }
         }
-        return true;
+        while (q.size() > 0) {
+            int curr = q.remove();
+            for (int neigh: g.get(curr)) {
+                inDegrees[neigh] -= 1;
+                if (inDegrees[neigh] == 0) {
+                    q.add(neigh);
+                }
+            }
+            res[sortedLen] = curr;
+            sortedLen += 1;
+        }
+
+        if (sortedLen != numCourses) {
+            return new int[]{};
+        }
+        return res;
     }
+
+
+    private static void buildGraph(int numCourses, int[][] prerequisites,
+                            Map<Integer, Set<Integer>> g, int[] inDegrees) {
+        for (int i = 0; i < numCourses; ++i) {
+            g.put(i, new HashSet<Integer>());
+        }
+        for (int[] pre: prerequisites) {
+            //System.out.println("check"+ g.get(pre[1]).add(pre[0]));
+            if (g.get(pre[1]).add(pre[0])) {
+                inDegrees[pre[0]] += 1;
+            }
+        }
+        System.out.println("g"+ g);
+        System.out.println("degree" +Arrays.toString(inDegrees));
+    }
+
+
+    // topological sort DFS
+
+        public static int[] findOrderDFS(int numCourses, int[][] prerequisites) {
+            Map<Integer, Set<Integer>> g = buildGraphDFS(numCourses, prerequisites);
+
+            boolean[] inPath = new boolean[numCourses];
+
+
+            boolean[] visited = new boolean[numCourses];
+
+            System.out.println("visted" + Arrays.toString(visited));
+            Deque<Integer> stack = new ArrayDeque<>();
+
+            for (int i = 0; i < numCourses; ++i) {
+                if (!visited[i] && !hasOrder(g, stack, inPath, visited, i)) {
+                    return new int[]{};
+                }
+            }
+
+            int[] res = new int[numCourses];
+            for (int i = 0; i < numCourses; ++i) {
+                res[i] = stack.removeFirst();
+            }
+            return res;
+        }
+
+        private static boolean hasOrder(Map<Integer, Set<Integer>> g,
+                                 Deque<Integer> stack, boolean[] inPath, boolean[] visited, int i) {
+            if (visited[i]) {
+                return true;
+            }
+            visited[i] = true;
+            inPath[i] = true;
+            for (int neigh: g.get(i)) {
+                if (inPath[neigh] || !hasOrder(g, stack, inPath, visited, neigh)) {
+                    return false;
+                }
+            }
+            inPath[i] = false;
+            stack.addFirst(i);
+            return true;
+        }
+
+        private static Map<Integer, Set<Integer>> buildGraphDFS(int numCourses, int[][] prerequisites) {
+            Map<Integer, Set<Integer>> g = new HashMap<>();
+            for (int i = 0; i < numCourses; ++i) {
+                g.put(i, new HashSet<Integer>());
+            }
+            for (int[] dep: prerequisites) {
+                g.get(dep[1]).add(dep[0]);
+            }
+            System.out.println(g);
+            return g;
+        }
+
 }
