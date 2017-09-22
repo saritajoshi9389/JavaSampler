@@ -393,6 +393,24 @@ public class Test {
         System.out.println("Course scheduler in topological sort :: " + Arrays.toString(findOrder(4, a)));
 
         System.out.println("Course scheduler in topological sort  DFS:: " + Arrays.toString(findOrderDFS(4, a)));
+        List<List<String>> s = new ArrayList<>();
+        s = Arrays.asList(
+        Arrays.asList("clean", "build"),
+        Arrays.asList("metadata", "binary"),
+        Arrays.asList("build", "link"),
+        Arrays.asList("link", "binary"),
+        Arrays.asList("clean", "metadata"),
+        Arrays.asList("build", "resources"));
+        System.out.println("Question intuit :: " + TopoWorkflow(s));
+
+        List<List<String>> s1 = Arrays.asList(
+                Arrays.asList("boil", "serve"),
+                Arrays.asList("chop", "boil"),
+                Arrays.asList("stir", "boil"),
+                Arrays.asList("set table", "serve")
+        );
+
+        System.out.println("Question intuit :: " + TopoWorkflow(s1));
     }
 
     // o(n^ 2) -> both time and space
@@ -774,5 +792,75 @@ public class Test {
             System.out.println(g);
             return g;
         }
+
+
+        public static List<List <String>> TopoWorkflow(List<List<String>> s){
+
+            Map<String, Set<String>> g = new HashMap<>();
+            Map<String, Integer>  indegrees = new HashMap<>();
+
+            for(int i = 0; i < s.size(); i ++){
+                if(!indegrees.containsKey(s.get(i).get(0))){
+                    indegrees.put(s.get(i).get(0), 0);
+                }
+                if(!indegrees.containsKey(s.get(i).get(1))){
+                    indegrees.put(s.get(i).get(1), 0);
+                }
+
+            }
+            System.out.println("unique words \n" +  indegrees);
+
+
+            List<List<String>>  res = new ArrayList<>();
+            List<String> tmp = new ArrayList<>();
+            buildGraphWorkflow(s, g, indegrees);
+
+            // BFS go with queue is must
+            Queue<String> q = new ArrayDeque<>();
+            for(String key: indegrees.keySet()){
+                if(indegrees.get(key) == 0){
+                    q.add(key);
+                    tmp.add(key);
+                }
+            }
+            res.add(tmp);
+            while(!q.isEmpty()){
+                String curr = q.remove();
+                tmp = new ArrayList<>();
+                for(String neigh: g.get(curr)){
+                    indegrees.put(neigh, indegrees.get(neigh) -1);
+                    if(indegrees.get(neigh) == 0){
+                        q.add(neigh);
+                        tmp.add(neigh);
+                    }
+
+
+                }
+                if(tmp.size() != 0)
+                    res.add(tmp);
+
+            }
+
+            return res;
+
+        }
+
+    private static void buildGraphWorkflow(List<List<String>> s, Map<String, Set<String>> g, Map<String, Integer> indegrees) {
+
+        for(String key: indegrees.keySet()){
+            if(!g.containsKey(key)){
+                g.put(key, new HashSet<String>());
+            }
+        }
+        System.out.println("g"+ g);
+
+        for (List<String> pre: s) {
+            if(g.get(pre.get(0)).add(pre.get(1))) {
+                indegrees.put(pre.get(1), indegrees.get(pre.get(1)) + 1);
+            }
+        }
+        System.out.println("\n" + g + "\n" + "indegrees" + indegrees);
+
+    }
 
 }
