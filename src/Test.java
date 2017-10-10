@@ -414,6 +414,7 @@ public class Test {
 
         System.out.println("add binary :: \n " + addBinary("11", "1"));
         System.out.println("Longest substring  :: "+ lengthOfLongestSubstring("abcaa"));
+        System.out.println(" Str str fb \n" + strStr("sarita", "rita"));
     }
 
     // o(n^ 2) -> both time and space
@@ -919,6 +920,64 @@ public class Test {
             map.put(s.charAt(j), j + 1);
         }
         return ans;
+    }
+
+    public static int strStr(String haystack, String needle) {
+        if(haystack==null || needle==null)
+            return 0;
+
+        if(needle.length() == 0)
+            return 0;
+
+        for(int i=0; i<haystack.length(); i++){
+            if(i + needle.length() > haystack.length())
+                return -1;
+
+            int m = i;
+            for(int j=0; j<needle.length(); j++){
+                if(needle.charAt(j)==haystack.charAt(m)){
+                    if(j==needle.length()-1)
+                        return i;
+                    m++;
+                }else{
+                    break;
+                }
+
+            }
+        }
+
+        return -1;
+    }
+    // Liveramp skyline problem
+    public static  int strokeCount(int[] skyline)
+    {
+        int level = 0;
+        int strokes = 0;
+
+        for (int i = 0 ; i < skyline.length; i++)
+        {
+            // if the building is higher than the current level, we need
+            // to make (level - height) new strokes
+            if (skyline[i] > level)
+            {
+                strokes += skyline[i] - level;
+                level = skyline[i];
+            }
+            // if the building is lower than the current level, we need
+            // to end the difference in strokes, but this doesn’t cost
+            // “new” ones
+            else if (skyline[i] < level)
+            {
+                level = skyline[i];
+            }
+            // if we stay on the same level, don’t do anything
+
+            // explicitely check for the maximum stroke count for every
+            // building, so we can abort early
+            if (strokes > 1000000000)
+                return -1;
+        }
+        return strokes;
     }
 
 }
