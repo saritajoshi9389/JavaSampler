@@ -411,6 +411,9 @@ public class Test {
         );
 
         System.out.println("Question intuit :: " + TopoWorkflow(s1));
+
+        System.out.println("add binary :: \n " + addBinary("11", "1"));
+        System.out.println("Longest substring  :: "+ lengthOfLongestSubstring("abcaa"));
     }
 
     // o(n^ 2) -> both time and space
@@ -861,6 +864,61 @@ public class Test {
         }
         System.out.println("\n" + g + "\n" + "indegrees" + indegrees);
 
+    }
+
+    public static String addBinary(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+
+        int i=a.length()-1;
+        int j=b.length()-1;
+
+        int carry = 0;
+
+        while(i>=0 || j>=0){
+            int sum=0;
+
+            if(i>=0 && a.charAt(i)=='1'){
+                sum++;
+            }
+
+            if(j>=0 && b.charAt(j)=='1'){
+                sum++;
+            }
+
+            sum += carry;
+
+            if(sum>=2){
+                carry=1;
+            }else{
+                carry=0;
+            }
+
+            sb.insert(0,  (char) ((sum%2) + '0'));
+            System.out.println((char) ((sum%2) + '0'));
+
+            i--;
+            j--;
+        }
+
+        if(carry==1)
+            sb.insert(0, '1');
+
+        return sb.toString();
+    }
+
+
+    public static int lengthOfLongestSubstring(String s) {
+        int n = s.length(), ans = 0;
+        Map<Character, Integer> map = new HashMap<>(); // current index of character
+        // try to extend the range [i, j]
+        for (int j = 0, i = 0; j < n; j++) {
+            if (map.containsKey(s.charAt(j))) {
+                i = Math.max(map.get(s.charAt(j)), i);
+            }
+            ans = Math.max(ans, j - i + 1);
+            map.put(s.charAt(j), j + 1);
+        }
+        return ans;
     }
 
 }
